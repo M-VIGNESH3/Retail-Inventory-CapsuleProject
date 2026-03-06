@@ -39,22 +39,19 @@ services:
     image: node:18-alpine
     container_name: ricp-backend
     working_dir: /app
-    # Install deps once and start
     command: sh -c "npm ci && node server.js"
     volumes:
-      - ./:/app:ro                    # mount entire app read-only
+      - ./:/app                # <— remove :ro so it's read-write
       - backend_node_modules:/app/node_modules
     environment:
-      # Adjust if server.js reads a different port; 3000 is common
       - PORT=3000
-      # If your app uses DB settings, copy from .env.example to .env and:
-      # - NODE_ENV=production
-      # - DB_* variables, etc.
     expose:
-      - "3000"                        # INTERNAL ONLY (NOT PUBLISHED)
+      - "3000"
     networks:
       - backend_net
     restart: unless-stopped
+      # - DB_* variables, etc.
+    
 
 volumes:
   backend_node_modules:
